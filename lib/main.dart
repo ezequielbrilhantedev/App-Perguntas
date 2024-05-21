@@ -1,75 +1,82 @@
 import 'package:flutter/material.dart';
 
-import './questao.dart';
-import './resposta.dart';
+import './questionario.dart';
+import './resultado.dart';
 
-main() {
-  runApp(PerguntaApp());
-}
+void main() => runApp(const PerguntaApp());
 
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
 
   void _responder() {
-    setState(() {
-      _perguntaSelecionada++;
-    });
+    if (temPerguntaSelecionada) {
+      setState(() {
+        _perguntaSelecionada++;
+      });
+    }
   }
+
+  bool get temPerguntaSelecionada {
+    return _perguntaSelecionada < _perguntas.length;
+  }
+
+  final _perguntas = const [
+    {
+      'texto': 'Qual é a sua cor favorita?',
+      'respostas': [
+        {'texto': 'Preto', 'nota': 10},
+        {'texto': 'Vermelho', 'nota': 5},
+        {'texto': 'Verde', 'nota': 3},
+        {'texto': 'Branco', 'nota': 1}
+      ],
+    },
+    {
+      'texto': 'Qual é o seu animal favorito?',
+      'respostas': [
+        {'texto': 'Coelho', 'nota': 10},
+        {'texto': 'Cobra', 'nota': 5},
+        {'texto': 'Elefante', 'nota': 3},
+        {'texto': 'Leão', 'nota': 1},
+      ],
+    },
+    {
+      'texto': 'Qual é o seu instrutor favorito?',
+      'respostas': [
+        {'texto': 'Maria', 'nota': 10},
+        {'texto': 'João', 'nota': 5},
+        {'texto': 'Leo', 'nota': 3},
+        {'texto': 'Pedro', 'nota': 1},
+      ],
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final perguntas = [
-      {
-        'texto': 'Qual é a sua cor favorita?',
-        'repostas': ['Preto', 'Vermelho', 'Branco', 'Azul']
-      },
-      {
-        'texto': 'Qual é o seu animal favorita?',
-        'repostas': ['Cachorro', 'Gato', 'Leão', 'Tigre']
-      },
-      {
-        'texto': 'Qual é sua linguagem de programação favorita?',
-        'repostas': ['JavaScript', 'Dart', 'Python', 'Java']
-      },
-    ];
-
-    // final respostas = [
-    //   {'text': 'Resposta 1'},
-    //   {'text': 'Resposta 2'},
-    //   {'text': 'Resposta 3'},
-    // ];
-
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'Perguntas',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              backgroundColor: const Color.fromRGBO(69, 71, 238, 0.992),
-            ),
-            body: Column(
-              children: <Widget>[
-                Questao(perguntas[_perguntaSelecionada]['texto'].toString()),
-                Resposta('Resposta 1', _responder),
-                Resposta('Resposta 2', _responder),
-                Resposta('Resposta 3', _responder),
-              ],
-            )));
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Perguntas',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.blue,
+        ),
+        body: temPerguntaSelecionada
+            ? Questionario(
+                perguntas: _perguntas,
+                perguntaSelecionada: _perguntaSelecionada,
+                quandoResponder: _responder)
+            : const Resultado(),
+      ),
+    );
   }
 }
 
-/*
-for (String textoResp in perguntas[_perguntaSelecionada].cast()['respostas']) {
-      respostas.add(Resposta(textoResp, _responder));
-    }
-*/
 class PerguntaApp extends StatefulWidget {
+  const PerguntaApp({super.key});
+
   @override
-  createState() {
+  _PerguntaAppState createState() {
     return _PerguntaAppState();
   }
 }
